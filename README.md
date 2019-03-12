@@ -1,6 +1,6 @@
 # YPDrawSignatureView
 ![Image of Swift Version Badge](https://img.shields.io/badge/Swift-4.2-lightgrey.svg)
-Simple class for capturing signatures.
+Simple class for capturing signatures, with custom validator.
 
 ## Swift 4
 
@@ -67,6 +67,10 @@ Notifies the delegate when someone starts a stroke in the view.
 
 Notifies the delegate when someone finishes a stroke in the view
 
+* `didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool`
+
+Use the the defined validation when call doesContainSignature property
+
 #### Example Code
 
 The following sample code checks if there is a signature in the view before getting it.
@@ -81,8 +85,8 @@ class ViewController: UIViewController, YPSignatureDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        // Setting this view controller as the signature view delegate, so the didStart() and
-        // didFinish() methods below in the delegate section are called.
+        // Setting this view controller as the signature view delegate, so the didStart(),
+        // didFinish() and didValidate() methods below in the delegate section are called.
         signatureView.delegate = self
     }
     
@@ -122,6 +126,14 @@ class ViewController: UIViewController, YPSignatureDelegate {
     // Can be used to enabe scrolling in a scroll view if it has previous been disabled.
     func didFinish(_ view: YPDrawSignatureView) {
         print("Finished Drawing")
+    }
+
+    // when doesContainSignature called and path different than empty, didValidate() is trigged
+    // is called rigth after the last touch of a gesture is registered in the view.
+    // This example validate if the drawing is bigger than 20x20
+    func didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool {
+        let bounds = path.bounds
+        return bounds.height > 20 && bounds.width > 20
     }
 }
 ```
