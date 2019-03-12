@@ -168,6 +168,10 @@ YPDrawSignatureView is available under the MIT license. See the [LICENSE](LICENS
 
 ## Update history
 
+### v1.3 - 3/12/19
+
+* Added support for custom validator.
+
 ### v1.2 - 7/4/18
 
 * Added support for multiple signature views.
