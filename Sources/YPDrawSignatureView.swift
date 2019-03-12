@@ -1,12 +1,12 @@
+// Forked From https://github.com/GJNilsen/YPDrawSignatureView/blob/master/LICENSE (Thank you!)
+// This Fork Contais delegate that expose a validator, so you can do your validation as you want
 // YPDrawSignatureView is open source
 // Version 1.2.0
 //
 // Copyright (c) 2014 - 2018 The YPDrawSignatureView Project Contributors
 // Available under the MIT license
 //
-// https://github.com/GJNilsen/YPDrawSignatureView/blob/master/LICENSE   License Information
-// https://github.com/GJNilsen/YPDrawSignatureView/blob/master/README.md Project Contributors
-
+// https://github.com/BrunooShow/YPDrawSignatureView/blob/master/LICENSE   License Information
 import UIKit
 import CoreGraphics
 
@@ -24,6 +24,7 @@ import CoreGraphics
 /// - Retrieve the signature from the field by either calling
 /// - getSignature() or
 /// - getCroppedSignature()
+
 @IBDesignable
 final public class YPDrawSignatureView: UIView {
     
@@ -52,19 +53,19 @@ final public class YPDrawSignatureView: UIView {
     
     // Computed Property returns true if the view actually contains a signature
     public var doesContainSignature: Bool {
-        get {
-            if path.isEmpty {
-                return false
-            } else {
-                return true
-            }
+        guard let delegate = delegate, !path.isEmpty else {
+            return false
         }
+        return delegate.didValidate(self, path: path)
     }
+    
     
     // MARK: - Private properties
     fileprivate var path = UIBezierPath()
     fileprivate var points = [CGPoint](repeating: CGPoint(), count: 5)
     fileprivate var controlPoint = 0
+    
+    public var validator: ((UIBezierPath) -> Bool)?
     
     // MARK: - Init
     required public init?(coder aDecoder: NSCoder) {
@@ -97,9 +98,7 @@ final public class YPDrawSignatureView: UIView {
             points[0] = touchPoint
         }
         
-        if let delegate = delegate {
-            delegate.didStart(self)
-        }
+        delegate?.didStart(self)
     }
     
     override public func touchesMoved(_ touches: Set <UITouch>, with event: UIEvent?) {
@@ -208,13 +207,16 @@ final public class YPDrawSignatureView: UIView {
 /// YPDrawSignatureViewDelegate:
 /// - optional didStart(_ view : YPDrawSignatureView)
 /// - optional didFinish(_ view : YPDrawSignatureView)
+/// - optional didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool
 @objc
 public protocol YPSignatureDelegate: class {
     func didStart(_ view : YPDrawSignatureView)
     func didFinish(_ view : YPDrawSignatureView)
+    func didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool
 }
 
 extension YPSignatureDelegate {
     func didStart(_ view : YPDrawSignatureView) {}
     func didFinish(_ view : YPDrawSignatureView) {}
+    func didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool { return false }
 }

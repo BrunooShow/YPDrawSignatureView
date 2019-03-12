@@ -1,11 +1,12 @@
+// Forked From https://github.com/GJNilsen/YPDrawSignatureView/blob/master/LICENSE (Thank you!)
+// This Fork Contais delegate that expose a validator, so you can do your validation as you want
 // YPDrawSignatureView is open source
 // Version 1.2.0
 //
 // Copyright (c) 2014 - 2018 The YPDrawSignatureView Project Contributors
 // Available under the MIT license
 //
-// https://github.com/GJNilsen/YPDrawSignatureView/blob/master/LICENSE   License Information
-// https://github.com/GJNilsen/YPDrawSignatureView/blob/master/README.md Project Contributors
+// https://github.com/BrunooShow/YPDrawSignatureView/blob/master/LICENSE   License Information
 
 import UIKit
 
@@ -64,5 +65,13 @@ class ViewController: UIViewController, YPSignatureDelegate {
     // Can be used to enabe scrolling in a scroll view if it has previous been disabled.
     func didFinish(_ view : YPDrawSignatureView) {
         print("Finished Drawing")
+    }
+    
+    // when doesContainSignature called and path different than empty, didValidate() is trigged
+    // is called rigth after the last touch of a gesture is registered in the view.
+    // This example validate if the drawing is bigger than 20x20
+    func didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool {
+        let bounds = path.bounds
+        return bounds.height > 20 && bounds.width > 20
     }
 }
