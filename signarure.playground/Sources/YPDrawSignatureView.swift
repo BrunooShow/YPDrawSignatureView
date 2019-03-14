@@ -1,13 +1,12 @@
 // Forked From https://github.com/GJNilsen/YPDrawSignatureView/blob/master/LICENSE (Thank you!)
 // This Fork Contais delegate that expose a validator, so you can do your validation as you want
 // YPDrawSignatureView is open source
-// Version 1.3.0
+// Version 1.2.0
 //
 // Copyright (c) 2014 - 2018 The YPDrawSignatureView Project Contributors
 // Available under the MIT license
 //
 // https://github.com/BrunooShow/YPDrawSignatureView/blob/master/LICENSE   License Information
-
 import UIKit
 import CoreGraphics
 
@@ -54,9 +53,8 @@ final public class YPDrawSignatureView: UIView {
     
     // Computed Property returns true if the view actually contains a signature
     public var doesContainSignature: Bool {
-        
-        guard let delegate = delegate else {
-            return !path.isEmpty
+        guard let delegate = delegate, !path.isEmpty else {
+            return false
         }
         return delegate.didValidate(self, path: path)
     }
@@ -209,11 +207,11 @@ final public class YPDrawSignatureView: UIView {
 /// YPDrawSignatureViewDelegate:
 /// - optional didStart(_ view : YPDrawSignatureView)
 /// - optional didFinish(_ view : YPDrawSignatureView)
+/// - optional didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool
 @objc
 public protocol YPSignatureDelegate: class {
     func didStart(_ view : YPDrawSignatureView)
     func didFinish(_ view : YPDrawSignatureView)
-    
     func didValidate(_ view: YPDrawSignatureView, path: UIBezierPath) -> Bool
 }
 
